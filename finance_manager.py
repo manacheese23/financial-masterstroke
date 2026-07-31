@@ -1,7 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
 from tkinter import messagebox
-
 import csv
 import os
 from datetime import datetime
@@ -21,13 +19,11 @@ root.title("FinTrack")
 root.geometry("600x500")
 root.resizable(False, False)
 
-
 # ==========================
 # Helper Functions
 # ==========================
 
 def coming_soon():
-    """Displays a placeholder message for unfinished features."""
     messagebox.showinfo(
         "Coming Soon",
         "This feature will be implemented in the next phase."
@@ -35,7 +31,6 @@ def coming_soon():
 
 
 def create_menu_button(parent, text, command):
-    """Creates a standard menu button."""
     button = tk.Button(
         parent,
         text=text,
@@ -45,7 +40,6 @@ def create_menu_button(parent, text, command):
         command=command
     )
     button.pack(pady=5)
-
 
 # ==========================
 # GUI Functions
@@ -77,10 +71,8 @@ def create_main_window():
     create_menu_button(menu_frame, "Add Transaction", coming_soon)
     create_menu_button(menu_frame, "View Transactions", coming_soon)
     create_menu_button(menu_frame, "Monthly Summary", coming_soon)
-    create_menu_button(menu_frame, "Category Report", coming_soon)
     create_menu_button(menu_frame, "Delete Transaction", coming_soon)
     create_menu_button(menu_frame, "Exit", root.destroy)
-
 
 # ==========================
 # Start Application
