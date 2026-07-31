@@ -208,6 +208,49 @@ def open_view_window():
     view_window.title("View Transactions")
     view_window.geometry("800x400")
     view_window.resizable(False, False)
+    columns = (
+        "ID",
+        "Date",
+        "Type",
+        "Category",
+        "Amount",
+        "Description"
+    )
+
+    transaction_table = ttk.Treeview(
+        view_window,
+        columns=columns,
+        show="headings"
+    )
+    transaction_table.heading("ID", text="ID")
+    transaction_table.heading("Date", text="Date")
+    transaction_table.heading("Type", text="Type")
+    transaction_table.heading("Category", text="Category")
+    transaction_table.heading("Amount", text="Amount")
+    transaction_table.heading("Description", text="Description")
+    transaction_table.column("ID", width=50, anchor="center")
+    transaction_table.column("Date", width=100, anchor="center")
+    transaction_table.column("Type", width=100, anchor="center")
+    transaction_table.column("Category", width=120, anchor="center")
+    transaction_table.column("Amount", width=100, anchor="center")
+    transaction_table.column("Description", width=250)
+    with open(CSV_FILE, "r", newline="") as file:
+        reader = csv.reader(file)
+
+        next(reader)  # Skip header row
+
+        for row in reader:
+            transaction_table.insert(
+                "",
+                tk.END,
+                values=row
+            )
+    transaction_table.pack(
+        fill="both",
+        expand=True,
+        padx=10,
+        pady=10
+    )
 
 # ==========================
 # Main Window
@@ -231,6 +274,7 @@ def create_main_window():
         font=("Segoe UI", 12)
     )
     subtitle_label.pack()
+    
 
     menu_frame = tk.Frame(root)
     menu_frame.pack(pady=30)
