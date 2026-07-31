@@ -1,8 +1,10 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import csv
 import os
 from datetime import datetime
+
 
 # ==========================
 # Constants
@@ -41,9 +43,7 @@ def create_menu_button(parent, text, command):
     )
     button.pack(pady=5)
 
-# ==========================
-# GUI Functions
-# ==========================
+
 def initialize_csv():
     if not os.path.exists(CSV_FILE):
         with open(CSV_FILE, "w", newline="") as file:
@@ -57,8 +57,91 @@ def initialize_csv():
                 "Description"
             ])
 
+
+# ==========================
+# Add Transaction Window
+# ==========================
+
+def open_add_window():
+
+    add_window = tk.Toplevel(root)
+    add_window.title("Add Transaction")
+    add_window.geometry("400x350")
+    add_window.resizable(False, False)
+
+    # Labels
+    tk.Label(add_window, text="Date").grid(row=0, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(add_window, text="Type").grid(row=1, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(add_window, text="Category").grid(row=2, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(add_window, text="Amount").grid(row=3, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(add_window, text="Description").grid(row=4, column=0, padx=10, pady=10, sticky="w")
+
+# Date Entry (Today's date by default)
+    today = datetime.now().strftime("%d-%m-%Y")
+
+    date_entry = tk.Entry(add_window, width=25)
+    date_entry.grid(row=0, column=1, padx=10, pady=10)
+
+    date_entry.insert(0, today)
+    # Type Dropdown
+    type_combo = ttk.Combobox(
+        add_window,
+        values=["Income", "Expense"],
+        state="readonly",
+        width=22
+    )
+    type_combo.grid(row=1, column=1, padx=10, pady=10)
+    type_combo.current(0)
+
+    # Category Dropdown
+    category_combo = ttk.Combobox(
+        add_window,
+        values=[
+            "Food",
+            "Transport",
+            "Shopping",
+            "Bills",
+            "Entertainment",
+            "Education",
+            "Salary",
+            "Freelance",
+            "Other"
+        ],
+        state="readonly",
+        width=22
+    )
+    category_combo.grid(row=2, column=1, padx=10, pady=10)
+    category_combo.current(0)
+
+    # Amount Entry
+    amount_entry = tk.Entry(add_window, width=25)
+    amount_entry.grid(row=3, column=1, padx=10, pady=10)
+
+    # Description Entry
+    description_entry = tk.Entry(add_window, width=25)
+    description_entry.grid(row=4, column=1, padx=10, pady=10)
+
+    # Save Button
+    save_button = tk.Button(
+        add_window,
+        text="Save",
+        width=15
+    )
+
+    save_button.grid(
+        row=5,
+        column=0,
+        columnspan=2,
+        pady=20
+    )
+
+
+# ==========================
+# Main Window
+# ==========================
+
 def create_main_window():
-    # Header Frame
+
     header_frame = tk.Frame(root)
     header_frame.pack(pady=20)
 
@@ -76,7 +159,6 @@ def create_main_window():
     )
     subtitle_label.pack()
 
-    # Menu Frame
     menu_frame = tk.Frame(root)
     menu_frame.pack(pady=30)
 
@@ -86,16 +168,11 @@ def create_main_window():
     create_menu_button(menu_frame, "Delete Transaction", coming_soon)
     create_menu_button(menu_frame, "Exit", root.destroy)
 
-def open_add_window():
-    add_window = tk.Toplevel(root)
-
-    add_window.title("Add Transaction")
-    add_window.geometry("400x350")
-    add_window.resizable(False, False)
 
 # ==========================
 # Start Application
 # ==========================
+
 initialize_csv()
 create_main_window()
 
