@@ -44,6 +44,18 @@ def create_menu_button(parent, text, command):
 # ==========================
 # GUI Functions
 # ==========================
+def initialize_csv():
+    if not os.path.exists(CSV_FILE):
+        with open(CSV_FILE, "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow([
+                "ID",
+                "Date",
+                "Type",
+                "Category",
+                "Amount",
+                "Description"
+            ])
 
 def create_main_window():
     # Header Frame
@@ -77,7 +89,7 @@ def create_main_window():
 # ==========================
 # Start Application
 # ==========================
-
+initialize_csv()
 create_main_window()
 
 root.mainloop()
