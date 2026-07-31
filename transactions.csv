@@ -1,6 +1,6 @@
 ID,Date,Type,Category,Amount,Description
 1,01-07-2026,Income,Salary,25000,Monthly Salary
-2,01-07-2026,Expense,Bills,1800,Electricity Bill
+2,01-07-2026,Expense,Education,1800.0,books
 3,02-07-2026,Expense,Food,320,Grocery Shopping
 4,03-07-2026,Expense,Transport,180,Metro Card Recharge
 5,04-07-2026,Expense,Entertainment,450,Movie Ticket

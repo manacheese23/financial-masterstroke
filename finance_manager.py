@@ -1,3 +1,4 @@
+from statistics import mode
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
@@ -109,32 +110,98 @@ def save_transaction(
     )
 
     add_window.destroy()
+def update_transaction(
+    window,
+    transaction_id,
+    date_entry,
+    type_combo,
+    category_combo,
+    amount_entry,
+    description_entry,
+    manage_window,
+    transaction_table
+):
+
+    date = date_entry.get()
+    transaction_type = type_combo.get()
+    category = category_combo.get()
+    amount = amount_entry.get()
+    description = description_entry.get()
+
+    if amount == "" or description == "":
+        messagebox.showerror(
+            "Error",
+            "Please fill all fields."
+        )
+        return
+
+    try:
+        amount = float(amount)
+    except ValueError:
+        messagebox.showerror(
+            "Invalid Amount",
+            "Amount must be a valid number."
+        )
+        return
+
+    with open(CSV_FILE, "r", newline="") as file:
+        rows = list(csv.reader(file))
+
+    for row in rows[1:]:
+        if row[0] == transaction_id:
+            row[1] = date
+            row[2] = transaction_type
+            row[3] = category
+            row[4] = amount
+            row[5] = description
+
+    with open(CSV_FILE, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerows(rows)
+
+    perform_search(transaction_table, "")
+
+    messagebox.showinfo(
+        "Success",
+        "Transaction updated successfully."
+    )
+
+    window.destroy()
 
 
-def open_add_window():
 
-    add_window = tk.Toplevel(root)
-    add_window.title("Add Transaction")
-    add_window.geometry("400x350")
-    add_window.resizable(False, False)
+def open_transaction_window(
+    mode="add",
+    selected_row=None,
+    manage_window=None,
+    transaction_table=None
+):
+
+    window = tk.Toplevel(root)
+    if mode == "add":
+        window.title("Add Transaction")
+    else:
+        window.title("Edit Transaction")
+    window.geometry("400x350")
+    window.resizable(False, False)
 
     # Labels
-    tk.Label(add_window, text="Date").grid(row=0, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(add_window, text="Type").grid(row=1, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(add_window, text="Category").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(add_window, text="Amount").grid(row=3, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(add_window, text="Description").grid(row=4, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(window, text="Date").grid(row=0, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(window, text="Type").grid(row=1, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(window, text="Category").grid(row=2, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(window, text="Amount").grid(row=3, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(window, text="Description").grid(row=4, column=0, padx=10, pady=10, sticky="w")
 
 # Date Entry (Today's date by default)
     today = datetime.now().strftime("%d-%m-%Y")
 
-    date_entry = tk.Entry(add_window, width=25)
+    date_entry = tk.Entry(window, width=25)
     date_entry.grid(row=0, column=1, padx=10, pady=10)
 
     date_entry.insert(0, today)
     # Type Dropdown
     type_combo = ttk.Combobox(
-        add_window,
+        window,
         values=["Income", "Expense"],
         state="readonly",
         width=22
@@ -144,7 +211,7 @@ def open_add_window():
 
     # Category Dropdown
     category_combo = ttk.Combobox(
-        add_window,
+        window,
         values=[
             "Food",
             "Transport",
@@ -163,33 +230,74 @@ def open_add_window():
     category_combo.current(0)
 
     # Amount Entry
-    amount_entry = tk.Entry(add_window, width=25)
+    amount_entry = tk.Entry(window, width=25)
     amount_entry.grid(row=3, column=1, padx=10, pady=10)
 
     # Description Entry
-    description_entry = tk.Entry(add_window, width=25)
+    description_entry = tk.Entry(window, width=25)
     description_entry.grid(row=4, column=1, padx=10, pady=10)
 
-    # Save Button
-    save_button = tk.Button(
-        add_window,
-        text="Save",
-        width=15,
-        command=lambda: save_transaction(
-            add_window,
+        # Save Button
+    button_text = "Save"
+
+    if mode == "edit":
+        button_text = "Update"
+    if mode == "edit":
+
+        date_entry.delete(0, tk.END)
+        date_entry.insert(0, selected_row[1])
+
+        type_combo.set(selected_row[2])
+
+        category_combo.set(selected_row[3])
+
+        amount_entry.insert(0, selected_row[4])
+
+        description_entry.insert(0, selected_row[5])
+
+    button_text = "Save"
+
+    if mode == "edit":
+        button_text = "Update"
+
+    if mode == "add":
+
+         button_command = lambda: save_transaction(
+            window,
+            date_entry,
+             type_combo,
+            category_combo,
+             amount_entry,
+            description_entry
+    )
+
+    else:
+
+        button_command = lambda: update_transaction(
+            window,
+            selected_row[0],
             date_entry,
             type_combo,
             category_combo,
             amount_entry,
-            description_entry
-        )
+            description_entry,
+            manage_window,
+            transaction_table
     )
+
+    save_button = tk.Button(
+        window,
+        text=button_text,
+        width=15,
+        command=button_command
+)
+
     save_button.grid(
-    row=5,
-    column=0,
-    columnspan=2,
-    pady=20
-    )
+        row=5,
+        column=0,
+        columnspan=2,
+        pady=20
+)
 
 def search_transactions(search_text):
 
@@ -234,6 +342,31 @@ def perform_search(transaction_table, search_text):
             tk.END,
             values=row
         )
+def edit_selected(
+    manage_window,
+    transaction_table
+):
+
+    selected = transaction_table.selection()
+
+    if not selected:
+        messagebox.showwarning(
+            "No Selection",
+            "Please select a transaction."
+        )
+        return
+
+    values = transaction_table.item(
+        selected,
+        "values"
+    )
+
+    open_transaction_window(
+        mode="edit",
+        selected_row=values,
+        manage_window=manage_window,
+        transaction_table=transaction_table
+    )
 
 def open_manage_window():
 
@@ -281,10 +414,17 @@ def open_manage_window():
     button_frame.pack(pady=10)
 
     tk.Button(
-        button_frame,
-        text="Edit Selected",
-        width=18
-    ).pack(side="left", padx=10)
+    button_frame,
+    text="Edit Selected",
+    width=18,
+    command=lambda: edit_selected(
+        manage_window,
+        table
+    )
+).pack(
+    side="left",
+    padx=10
+)
 
     tk.Button(
         button_frame,
@@ -367,12 +507,19 @@ def open_summary_window():
     summary_window = tk.Toplevel(root)
 
     summary_window.title("Monthly Summary")
-    summary_window.geometry("400x300")
+    summary_window.geometry("400x520")
     summary_window.resizable(False, False)
 
     total_income = 0
     total_expense = 0
     transaction_count = 0
+
+    income_count = 0
+    expense_count = 0
+
+    highest_income = 0
+    highest_expense = 0
+    expense_categories = {}
 
     with open(CSV_FILE, "r", newline="") as file:
 
@@ -388,11 +535,43 @@ def open_summary_window():
             amount = float(row[4])
 
             if transaction_type == "Income":
+
                 total_income += amount
+                income_count += 1
+
+                if amount > highest_income:
+                    highest_income = amount
+
             else:
-                total_expense += amount
+
+                 total_expense += amount
+                 expense_count += 1
+
+                 if amount > highest_expense:
+                    highest_expense = amount
+                 category = row[3]
+                 if category not in expense_categories:
+                    expense_categories[category] = 0
+
+                 expense_categories[category] += amount
 
     net_balance = total_income - total_expense
+    average_income = 0
+    average_expense = 0
+
+    if income_count > 0:
+        average_income = total_income / income_count
+
+    if expense_count > 0:
+        average_expense = total_expense / expense_count
+    largest_category = ""
+    largest_amount = 0
+
+    for category in expense_categories:
+
+        if expense_categories[category] > largest_amount:
+            largest_amount = expense_categories[category]
+            largest_category = category
 
     tk.Label(
         summary_window,
@@ -423,6 +602,52 @@ def open_summary_window():
         text=f"Transactions : {transaction_count}",
         font=("Segoe UI", 11)
     ).pack(pady=5)
+    tk.Label(
+    summary_window,
+    text=f"Income Transactions : {income_count}",
+    font=("Segoe UI", 11)
+).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Expense Transactions : {expense_count}",
+        font=("Segoe UI", 11)
+).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Highest Income : ₹{highest_income:.2f}",
+        font=("Segoe UI", 11)
+).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Highest Expense : ₹{highest_expense:.2f}",
+        font=("Segoe UI", 11)
+).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Average Income : ₹{average_income:.2f}",
+        font=("Segoe UI", 11)
+).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Average Expense : ₹{average_expense:.2f}",
+        font=("Segoe UI", 11)
+).pack(pady=5)
+    tk.Label(
+        summary_window,
+        text=f"Highest Spending Category : {largest_category}",
+        font=("Segoe UI", 11, "bold")
+).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Spent : ₹{largest_amount:.2f}",
+        font=("Segoe UI", 11)
+).pack(pady=5)
 # ==========================
 # Main Window
 # ==========================
@@ -450,7 +675,11 @@ def create_main_window():
     menu_frame = tk.Frame(root)
     menu_frame.pack(pady=30)
 
-    create_menu_button(menu_frame, "Add Transaction", open_add_window)
+    create_menu_button(
+    menu_frame,
+    "Add Transaction",
+    lambda: open_transaction_window("add")
+)
     create_menu_button(
     menu_frame,
     "Manage Transactions",
