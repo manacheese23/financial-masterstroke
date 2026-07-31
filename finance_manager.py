@@ -235,16 +235,15 @@ def perform_search(transaction_table, search_text):
             values=row
         )
 
+def open_manage_window():
 
-def open_view_window():
+    manage_window = tk.Toplevel(root)
 
-    view_window = tk.Toplevel(root)
+    manage_window.title("Manage Transactions")
+    manage_window.geometry("900x500")
+    manage_window.resizable(False, False)
 
-    view_window.title("View Transactions")
-    view_window.geometry("850x450")
-    view_window.resizable(False, False)
-
-    search_frame = tk.Frame(view_window)
+    search_frame = tk.Frame(manage_window)
     search_frame.pack(pady=10)
 
     tk.Label(
@@ -258,28 +257,54 @@ def open_view_window():
     )
     search_entry.pack(side="left", padx=5)
 
-    table = create_transaction_table(view_window)
+    table = create_transaction_table(manage_window)
 
-    search_button = tk.Button(
+    tk.Button(
         search_frame,
         text="Search",
         command=lambda: perform_search(
             table,
             search_entry.get()
         )
-    )
-    search_button.pack(side="left", padx=5)
+    ).pack(side="left", padx=5)
 
-    show_all_button = tk.Button(
+    tk.Button(
         search_frame,
         text="Show All",
         command=lambda: perform_search(
             table,
             ""
         )
-    )
-    show_all_button.pack(side="left", padx=5)
+    ).pack(side="left", padx=5)
 
+    button_frame = tk.Frame(manage_window)
+    button_frame.pack(pady=10)
+
+    tk.Button(
+        button_frame,
+        text="Edit Selected",
+        width=18
+    ).pack(side="left", padx=10)
+
+    tk.Button(
+        button_frame,
+        text="Delete Selected",
+        width=18,
+        command=lambda: delete_transaction(
+            manage_window,
+            table
+        )
+    ).pack(side="left", padx=10)
+
+    tk.Button(
+        button_frame,
+        text="Refresh",
+        width=18,
+        command=lambda: perform_search(
+            table,
+            ""
+        )
+    ).pack(side="left", padx=10)
 
 def delete_transaction(delete_window, transaction_table):
     selected_item = transaction_table.selection()
@@ -331,29 +356,10 @@ def delete_transaction(delete_window, transaction_table):
         "Transaction deleted successfully."
     )
 
-    delete_window.destroy()
-
-def open_delete_window():
-
-    delete_window = tk.Toplevel(root)
-
-    delete_window.title("Delete Transaction")
-    delete_window.geometry("800x450")
-    delete_window.resizable(False, False)
-
-    transaction_table = create_transaction_table(delete_window)
-
-    delete_button = tk.Button(
-    delete_window,
-    text="Delete Selected",
-    width=20,
-    command=lambda: delete_transaction(
-        delete_window,
-        transaction_table
-    )
+    perform_search(
+    transaction_table,
+    ""
 )
-
-    delete_button.pack(pady=10)
 
 
 def open_summary_window():
@@ -445,9 +451,12 @@ def create_main_window():
     menu_frame.pack(pady=30)
 
     create_menu_button(menu_frame, "Add Transaction", open_add_window)
-    create_menu_button(menu_frame, "View Transactions", open_view_window)
+    create_menu_button(
+    menu_frame,
+    "Manage Transactions",
+    open_manage_window
+)
     create_menu_button(menu_frame, "Monthly Summary", open_summary_window)
-    create_menu_button(menu_frame, "Delete Transaction", open_delete_window)
     create_menu_button(menu_frame, "Exit", root.destroy)
 
 def create_transaction_table(parent, rows=None):

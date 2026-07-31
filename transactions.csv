@@ -23,26 +23,24 @@ ID,Date,Type,Category,Amount,Description
 22,24-07-2026,Expense,Shopping,2100,Headphones
 23,25-07-2026,Income,Other,800,Cashback Reward
 24,26-07-2026,Expense,Transport,220,Bus Pass
-25,27-07-2026,Expense,Food,190,Snacks
-26,28-07-2026,Expense,Education,600,Exam Fee
-27,29-07-2026,Expense,Bills,1400,Mobile Recharge
-28,30-07-2026,Income,Freelance,5200,App Development
-29,31-07-2026,Expense,Entertainment,999,Gaming Purchase
-30,01-08-2026,Income,Salary,25000,Monthly Salary
-31,02-08-2026,Expense,Food,410,Groceries
-32,03-08-2026,Expense,Transport,175,Metro Travel
-33,04-08-2026,Expense,Shopping,1600,Backpack
-34,05-08-2026,Expense,Bills,1750,Electricity Bill
-35,06-08-2026,Income,Freelance,2800,Content Writing
-36,07-08-2026,Expense,Entertainment,550,Concert Ticket
-37,08-08-2026,Expense,Education,1200,Reference Book
-38,09-08-2026,Expense,Food,340,Dinner
-39,10-08-2026,Expense,Transport,260,Taxi
-40,11-08-2026,Income,Other,1500,Festival Gift
-41,12-08-2026,Expense,Bills,999,WiFi Recharge
-42,13-08-2026,Expense,Shopping,1350,Keyboard
-43,14-08-2026,Expense,Food,280,Lunch
-44,15-08-2026,Income,Freelance,6400,Python Automation
-45,16-08-2026,Expense,Entertainment,650,Theme Park
-46,17-08-2026,Expense,Education,2100,Tuition Fees
-47,18-08-2026,Expense,Transport,300,Petrol
+25,28-07-2026,Expense,Education,600,Exam Fee
+26,29-07-2026,Expense,Bills,1400,Mobile Recharge
+27,31-07-2026,Expense,Entertainment,999,Gaming Purchase
+28,01-08-2026,Income,Salary,25000,Monthly Salary
+29,02-08-2026,Expense,Food,410,Groceries
+30,03-08-2026,Expense,Transport,175,Metro Travel
+31,04-08-2026,Expense,Shopping,1600,Backpack
+32,05-08-2026,Expense,Bills,1750,Electricity Bill
+33,06-08-2026,Income,Freelance,2800,Content Writing
+34,07-08-2026,Expense,Entertainment,550,Concert Ticket
+35,08-08-2026,Expense,Education,1200,Reference Book
+36,09-08-2026,Expense,Food,340,Dinner
+37,10-08-2026,Expense,Transport,260,Taxi
+38,11-08-2026,Income,Other,1500,Festival Gift
+39,12-08-2026,Expense,Bills,999,WiFi Recharge
+40,13-08-2026,Expense,Shopping,1350,Keyboard
+41,14-08-2026,Expense,Food,280,Lunch
+42,15-08-2026,Income,Freelance,6400,Python Automation
+43,16-08-2026,Expense,Entertainment,650,Theme Park
+44,17-08-2026,Expense,Education,2100,Tuition Fees
+45,18-08-2026,Expense,Transport,300,Petrol
