@@ -5,10 +5,7 @@ import csv
 import os
 from datetime import datetime
 
-from click import confirm
-
 CSV_FILE = "transactions.csv"
-
 
 root = tk.Tk()
 root.title("FinTrack")
@@ -198,10 +195,40 @@ def open_add_window():
 def open_view_window():
 
     view_window = tk.Toplevel(root)
+
     view_window.title("View Transactions")
-    view_window.geometry("800x400")
+    view_window.geometry("850x450")
     view_window.resizable(False, False)
-    create_transaction_table(view_window) 
+
+    # Search Frame
+    search_frame = tk.Frame(view_window)
+    search_frame.pack(pady=10)
+
+    tk.Label(
+        search_frame,
+        text="Search:"
+    ).pack(side="left", padx=5)
+
+    search_entry = tk.Entry(
+        search_frame,
+        width=30
+    )
+    search_entry.pack(side="left", padx=5)
+
+    search_button = tk.Button(
+        search_frame,
+        text="Search"
+    )
+    search_button.pack(side="left", padx=5)
+
+    show_all_button = tk.Button(
+        search_frame,
+        text="Show All"
+    )
+    show_all_button.pack(side="left", padx=5)
+
+    create_transaction_table(view_window)
+
 
 def delete_transaction(delete_window, transaction_table):
     selected_item = transaction_table.selection()
@@ -372,7 +399,7 @@ def create_main_window():
     create_menu_button(menu_frame, "Delete Transaction", open_delete_window)
     create_menu_button(menu_frame, "Exit", root.destroy)
 
-def create_transaction_table(parent):
+def create_transaction_table(parent, rows=None):
 
     table_frame = tk.Frame(parent)
     table_frame.pack(fill="both", expand=True, padx=10, pady=10)
@@ -421,17 +448,21 @@ def create_transaction_table(parent):
         yscrollcommand=scrollbar.set
     )
 
-    with open(CSV_FILE, "r", newline="") as file:
-        reader = csv.reader(file)
+    if rows is None:
 
-        next(reader)
+        with open(CSV_FILE, "r", newline="") as file:
+            reader = csv.reader(file)
 
-        for row in reader:
-            transaction_table.insert(
-                "",
-                tk.END,
-                values=row
-            )
+            next(reader)
+
+            rows = list(reader)
+
+    for row in rows:
+        transaction_table.insert(
+            "",
+            tk.END,
+            values=row
+        )
 
     transaction_table.pack(
         side="left",
