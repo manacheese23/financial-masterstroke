@@ -191,6 +191,50 @@ def open_add_window():
     pady=20
     )
 
+def search_transactions(search_text):
+
+    results = []
+
+    with open(CSV_FILE, "r", newline="") as file:
+
+        reader = csv.reader(file)
+
+        next(reader)
+
+        for row in reader:
+
+            for value in row:
+
+                if search_text.lower() in value.lower():
+
+                    results.append(row)
+
+                    break
+
+    return results
+def perform_search(transaction_table, search_text):
+
+    # Clear current rows
+    for item in transaction_table.get_children():
+        transaction_table.delete(item)
+
+    # Decide what to show
+    if search_text == "":
+        with open(CSV_FILE, "r", newline="") as file:
+            reader = csv.reader(file)
+            next(reader)
+            rows = list(reader)
+    else:
+        rows = search_transactions(search_text)
+
+    # Insert rows
+    for row in rows:
+        transaction_table.insert(
+            "",
+            tk.END,
+            values=row
+        )
+
 
 def open_view_window():
 
@@ -200,7 +244,6 @@ def open_view_window():
     view_window.geometry("850x450")
     view_window.resizable(False, False)
 
-    # Search Frame
     search_frame = tk.Frame(view_window)
     search_frame.pack(pady=10)
 
@@ -215,19 +258,27 @@ def open_view_window():
     )
     search_entry.pack(side="left", padx=5)
 
+    table = create_transaction_table(view_window)
+
     search_button = tk.Button(
         search_frame,
-        text="Search"
+        text="Search",
+        command=lambda: perform_search(
+            table,
+            search_entry.get()
+        )
     )
     search_button.pack(side="left", padx=5)
 
     show_all_button = tk.Button(
         search_frame,
-        text="Show All"
+        text="Show All",
+        command=lambda: perform_search(
+            table,
+            ""
+        )
     )
     show_all_button.pack(side="left", padx=5)
-
-    create_transaction_table(view_window)
 
 
 def delete_transaction(delete_window, transaction_table):
