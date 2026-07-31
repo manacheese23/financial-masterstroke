@@ -80,11 +80,18 @@ def create_main_window():
     menu_frame = tk.Frame(root)
     menu_frame.pack(pady=30)
 
-    create_menu_button(menu_frame, "Add Transaction", coming_soon)
+    create_menu_button(menu_frame, "Add Transaction", open_add_window)
     create_menu_button(menu_frame, "View Transactions", coming_soon)
     create_menu_button(menu_frame, "Monthly Summary", coming_soon)
     create_menu_button(menu_frame, "Delete Transaction", coming_soon)
     create_menu_button(menu_frame, "Exit", root.destroy)
+
+def open_add_window():
+    add_window = tk.Toplevel(root)
+
+    add_window.title("Add Transaction")
+    add_window.geometry("400x350")
+    add_window.resizable(False, False)
 
 # ==========================
 # Start Application
