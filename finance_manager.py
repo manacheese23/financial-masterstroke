@@ -61,7 +61,67 @@ def initialize_csv():
 # ==========================
 # Add Transaction Window
 # ==========================
+def save_transaction(
+    add_window,
+    date_entry,
+    type_combo,
+    category_combo,
+    amount_entry,
+    description_entry
+):
+    date = date_entry.get()
+    transaction_type = type_combo.get()
+    category = category_combo.get()
+    amount = amount_entry.get()
+    description = description_entry.get()
 
+    # Check for empty fields
+    if amount == "" or description == "":
+        messagebox.showerror(
+            "Error",
+            "Please fill all fields."
+        )
+        return
+
+    # Validate amount
+    try:
+        amount = float(amount)
+    except ValueError:
+        messagebox.showerror(
+            "Invalid Amount",
+            "Amount must be a valid number."
+        )
+        return
+
+    # Generate next transaction ID
+    transaction_id = 1
+
+    with open(CSV_FILE, "r", newline="") as file:
+        reader = csv.reader(file)
+        rows = list(reader)
+
+        if len(rows) > 1:
+            transaction_id = len(rows)
+
+    # Save transaction
+    with open(CSV_FILE, "a", newline="") as file:
+        writer = csv.writer(file)
+
+        writer.writerow([
+            transaction_id,
+            date,
+            transaction_type,
+            category,
+            amount,
+            description
+        ])
+
+    messagebox.showinfo(
+        "Success",
+        "Transaction saved successfully."
+    )
+
+    add_window.destroy()
 def open_add_window():
 
     add_window = tk.Toplevel(root)
@@ -125,14 +185,21 @@ def open_add_window():
     save_button = tk.Button(
         add_window,
         text="Save",
-        width=15
+        width=15,
+        command=lambda: save_transaction(
+            add_window,
+            date_entry,
+            type_combo,
+            category_combo,
+            amount_entry,
+            description_entry
+        )
     )
-
     save_button.grid(
-        row=5,
-        column=0,
-        columnspan=2,
-        pady=20
+    row=5,
+    column=0,
+    columnspan=2,
+    pady=20
     )
 
 
