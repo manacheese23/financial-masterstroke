@@ -5,25 +5,17 @@ import csv
 import os
 from datetime import datetime
 
-
-# ==========================
-# Constants
-# ==========================
+from click import confirm
 
 CSV_FILE = "transactions.csv"
 
-# ==========================
-# Main Window
-# ==========================
 
 root = tk.Tk()
 root.title("FinTrack")
 root.geometry("600x500")
 root.resizable(False, False)
 
-# ==========================
-# Helper Functions
-# ==========================
+
 
 def coming_soon():
     messagebox.showinfo(
@@ -57,10 +49,8 @@ def initialize_csv():
                 "Description"
             ])
 
+# Transaction Window
 
-# ==========================
-# Add Transaction Window
-# ==========================
 def save_transaction(
     add_window,
     date_entry,
@@ -122,6 +112,8 @@ def save_transaction(
     )
 
     add_window.destroy()
+
+
 def open_add_window():
 
     add_window = tk.Toplevel(root)
@@ -201,57 +193,86 @@ def open_add_window():
     columnspan=2,
     pady=20
     )
+
+
 def open_view_window():
 
     view_window = tk.Toplevel(root)
-
     view_window.title("View Transactions")
     view_window.geometry("800x400")
     view_window.resizable(False, False)
-    columns = (
-        "ID",
-        "Date",
-        "Type",
-        "Category",
-        "Amount",
-        "Description"
+    create_transaction_table(view_window) 
+
+def delete_transaction(delete_window, transaction_table):
+    selected_item = transaction_table.selection()
+
+    if not selected_item:
+        messagebox.showwarning(
+            "No Selection",
+            "Please select a transaction."
+        )
+        return
+
+    selected_values = transaction_table.item(
+        selected_item,
+        "values"
     )
 
-    transaction_table = ttk.Treeview(
-        view_window,
-        columns=columns,
-        show="headings"
+    transaction_id = selected_values[0]
+
+    confirm = messagebox.askyesno(
+        "Confirm Delete",
+        "Are you sure you want to delete this transaction?"
     )
-    transaction_table.heading("ID", text="ID")
-    transaction_table.heading("Date", text="Date")
-    transaction_table.heading("Type", text="Type")
-    transaction_table.heading("Category", text="Category")
-    transaction_table.heading("Amount", text="Amount")
-    transaction_table.heading("Description", text="Description")
-    transaction_table.column("ID", width=50, anchor="center")
-    transaction_table.column("Date", width=100, anchor="center")
-    transaction_table.column("Type", width=100, anchor="center")
-    transaction_table.column("Category", width=120, anchor="center")
-    transaction_table.column("Amount", width=100, anchor="center")
-    transaction_table.column("Description", width=250)
+
+    if not confirm:
+        return
+
+    # Read all rows
     with open(CSV_FILE, "r", newline="") as file:
         reader = csv.reader(file)
+        rows = list(reader)
 
-        next(reader)  # Skip header row
+    # Keep header and all rows except the selected one
+    updated_rows = [rows[0]]
 
-        for row in reader:
-            transaction_table.insert(
-                "",
-                tk.END,
-                values=row
-            )
-    transaction_table.pack(
-        fill="both",
-        expand=True,
-        padx=10,
-        pady=10
+    for row in rows[1:]:
+        if row[0] != transaction_id:
+            updated_rows.append(row)
+
+    # Rewrite the CSV
+    with open(CSV_FILE, "w", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerows(updated_rows)
+
+    messagebox.showinfo(
+        "Success",
+        "Transaction deleted successfully."
     )
 
+    delete_window.destroy()
+
+def open_delete_window():
+
+    delete_window = tk.Toplevel(root)
+
+    delete_window.title("Delete Transaction")
+    delete_window.geometry("800x450")
+    delete_window.resizable(False, False)
+
+    transaction_table = create_transaction_table(delete_window)
+
+    delete_button = tk.Button(
+    delete_window,
+    text="Delete Selected",
+    width=20,
+    command=lambda: delete_transaction(
+        delete_window,
+        transaction_table
+    )
+)
+
+    delete_button.pack(pady=10)
 # ==========================
 # Main Window
 # ==========================
@@ -282,14 +303,84 @@ def create_main_window():
     create_menu_button(menu_frame, "Add Transaction", open_add_window)
     create_menu_button(menu_frame, "View Transactions", open_view_window)
     create_menu_button(menu_frame, "Monthly Summary", coming_soon)
-    create_menu_button(menu_frame, "Delete Transaction", coming_soon)
+    create_menu_button(menu_frame, "Delete Transaction", open_delete_window)
     create_menu_button(menu_frame, "Exit", root.destroy)
 
+def create_transaction_table(parent):
 
-# ==========================
+    table_frame = tk.Frame(parent)
+    table_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+    columns = (
+        "ID",
+        "Date",
+        "Type",
+        "Category",
+        "Amount",
+        "Description"
+    )
+
+    transaction_table = ttk.Treeview(
+        table_frame,
+        columns=columns,
+        show="headings"
+    )
+
+    headings = [
+        "ID",
+        "Date",
+        "Type",
+        "Category",
+        "Amount",
+        "Description"
+    ]
+
+    for heading in headings:
+        transaction_table.heading(heading, text=heading)
+
+    transaction_table.column("ID", width=50, anchor="center")
+    transaction_table.column("Date", width=100, anchor="center")
+    transaction_table.column("Type", width=100, anchor="center")
+    transaction_table.column("Category", width=120, anchor="center")
+    transaction_table.column("Amount", width=100, anchor="center")
+    transaction_table.column("Description", width=250)
+
+    scrollbar = ttk.Scrollbar(
+        table_frame,
+        orient="vertical",
+        command=transaction_table.yview
+    )
+
+    transaction_table.configure(
+        yscrollcommand=scrollbar.set
+    )
+
+    with open(CSV_FILE, "r", newline="") as file:
+        reader = csv.reader(file)
+
+        next(reader)
+
+        for row in reader:
+            transaction_table.insert(
+                "",
+                tk.END,
+                values=row
+            )
+
+    transaction_table.pack(
+        side="left",
+        fill="both",
+        expand=True
+    )
+
+    scrollbar.pack(
+        side="right",
+        fill="y"
+    )
+
+    return transaction_table 
+
 # Start Application
-# ==========================
-
 initialize_csv()
 create_main_window()
 
