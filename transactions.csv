@@ -1,1 +1,49 @@
 ID,Date,Type,Category,Amount,Description
+1,01-07-2026,Income,Salary,25000,Monthly Salary
+2,01-07-2026,Expense,Bills,1800,Electricity Bill
+3,02-07-2026,Expense,Food,320,Grocery Shopping
+4,03-07-2026,Expense,Transport,180,Metro Card Recharge
+5,04-07-2026,Expense,Entertainment,450,Movie Ticket
+6,06-07-2026,Income,Freelance,3500,Website Project
+7,08-07-2026,Expense,Education,850,Python Book
+8,09-07-2026,Expense,Food,150,Coffee
+9,10-07-2026,Expense,Transport,250,Cab Fare
+10,11-07-2026,Income,Other,1000,Cash Gift
+11,12-07-2026,Expense,Bills,999,Internet Recharge
+12,13-07-2026,Expense,Food,480,Dinner
+13,14-07-2026,Expense,Entertainment,799,Spotify Subscription
+14,15-07-2026,Income,Freelance,4200,Logo Design
+15,16-07-2026,Expense,Shopping,950,Shoes
+16,17-07-2026,Expense,Food,275,Breakfast
+17,18-07-2026,Expense,Transport,300,Petrol
+18,19-07-2026,Expense,Education,1500,Online Course
+19,20-07-2026,Income,Salary,25000,Bonus
+20,21-07-2026,Expense,Bills,650,Water Bill
+21,22-07-2026,Expense,Entertainment,350,Bowling
+22,23-07-2026,Expense,Food,510,Restaurant
+23,24-07-2026,Expense,Shopping,2100,Headphones
+24,25-07-2026,Income,Other,800,Cashback Reward
+25,26-07-2026,Expense,Transport,220,Bus Pass
+26,27-07-2026,Expense,Food,190,Snacks
+27,28-07-2026,Expense,Education,600,Exam Fee
+28,29-07-2026,Expense,Bills,1400,Mobile Recharge
+29,30-07-2026,Income,Freelance,5200,App Development
+30,31-07-2026,Expense,Entertainment,999,Gaming Purchase
+31,01-08-2026,Income,Salary,25000,Monthly Salary
+32,02-08-2026,Expense,Food,410,Groceries
+33,03-08-2026,Expense,Transport,175,Metro Travel
+34,04-08-2026,Expense,Shopping,1600,Backpack
+35,05-08-2026,Expense,Bills,1750,Electricity Bill
+36,06-08-2026,Income,Freelance,2800,Content Writing
+37,07-08-2026,Expense,Entertainment,550,Concert Ticket
+38,08-08-2026,Expense,Education,1200,Reference Book
+39,09-08-2026,Expense,Food,340,Dinner
+40,10-08-2026,Expense,Transport,260,Taxi
+41,11-08-2026,Income,Other,1500,Festival Gift
+42,12-08-2026,Expense,Bills,999,WiFi Recharge
+43,13-08-2026,Expense,Shopping,1350,Keyboard
+44,14-08-2026,Expense,Food,280,Lunch
+45,15-08-2026,Income,Freelance,6400,Python Automation
+46,16-08-2026,Expense,Entertainment,650,Theme Park
+47,17-08-2026,Expense,Education,2100,Tuition Fees
+48,18-08-2026,Expense,Transport,300,Petrol

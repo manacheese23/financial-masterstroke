@@ -233,14 +233,17 @@ def delete_transaction(delete_window, transaction_table):
         reader = csv.reader(file)
         rows = list(reader)
 
-    # Keep header and all rows except the selected one
+    # Keep header and renumber IDs
     updated_rows = [rows[0]]
+    new_id = 1
 
     for row in rows[1:]:
         if row[0] != transaction_id:
+            row[0] = str(new_id)
             updated_rows.append(row)
+            new_id += 1
 
-    # Rewrite the CSV
+    # Rewrite CSV
     with open(CSV_FILE, "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerows(updated_rows)
@@ -273,6 +276,69 @@ def open_delete_window():
 )
 
     delete_button.pack(pady=10)
+
+
+def open_summary_window():
+
+    summary_window = tk.Toplevel(root)
+
+    summary_window.title("Monthly Summary")
+    summary_window.geometry("400x300")
+    summary_window.resizable(False, False)
+
+    total_income = 0
+    total_expense = 0
+    transaction_count = 0
+
+    with open(CSV_FILE, "r", newline="") as file:
+
+        reader = csv.reader(file)
+
+        next(reader)
+
+        for row in reader:
+
+            transaction_count += 1
+
+            transaction_type = row[2]
+            amount = float(row[4])
+
+            if transaction_type == "Income":
+                total_income += amount
+            else:
+                total_expense += amount
+
+    net_balance = total_income - total_expense
+
+    tk.Label(
+        summary_window,
+        text="Monthly Summary",
+        font=("Segoe UI", 18, "bold")
+    ).pack(pady=15)
+
+    tk.Label(
+        summary_window,
+        text=f"Total Income : ₹{total_income:.2f}",
+        font=("Segoe UI", 11)
+    ).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Total Expense : ₹{total_expense:.2f}",
+        font=("Segoe UI", 11)
+    ).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Net Balance : ₹{net_balance:.2f}",
+        font=("Segoe UI", 11)
+    ).pack(pady=5)
+
+    tk.Label(
+        summary_window,
+        text=f"Transactions : {transaction_count}",
+        font=("Segoe UI", 11)
+    ).pack(pady=5)
 # ==========================
 # Main Window
 # ==========================
@@ -302,7 +368,7 @@ def create_main_window():
 
     create_menu_button(menu_frame, "Add Transaction", open_add_window)
     create_menu_button(menu_frame, "View Transactions", open_view_window)
-    create_menu_button(menu_frame, "Monthly Summary", coming_soon)
+    create_menu_button(menu_frame, "Monthly Summary", open_summary_window)
     create_menu_button(menu_frame, "Delete Transaction", open_delete_window)
     create_menu_button(menu_frame, "Exit", root.destroy)
 
