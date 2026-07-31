@@ -201,7 +201,13 @@ def open_add_window():
     columnspan=2,
     pady=20
     )
+def open_view_window():
 
+    view_window = tk.Toplevel(root)
+
+    view_window.title("View Transactions")
+    view_window.geometry("800x400")
+    view_window.resizable(False, False)
 
 # ==========================
 # Main Window
@@ -230,7 +236,7 @@ def create_main_window():
     menu_frame.pack(pady=30)
 
     create_menu_button(menu_frame, "Add Transaction", open_add_window)
-    create_menu_button(menu_frame, "View Transactions", coming_soon)
+    create_menu_button(menu_frame, "View Transactions", open_view_window)
     create_menu_button(menu_frame, "Monthly Summary", coming_soon)
     create_menu_button(menu_frame, "Delete Transaction", coming_soon)
     create_menu_button(menu_frame, "Exit", root.destroy)
