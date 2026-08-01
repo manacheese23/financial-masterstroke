@@ -759,11 +759,64 @@ def open_summary_window():
     ).pack(side="left", padx=5)
 
     tk.Button(
+        content,
+        text="Show Expense Bar Chart",
+        width=18,
+        command=show_bar_chart
+    ).pack(pady=10)
+    tk.Button(
         button_frame,
         text="Income vs Expense",
         width=18,
         command=show_income_expense_chart
     ).pack(side="left", padx=5)
+
+def show_bar_chart():
+
+    category_totals = {}
+
+    with open(CSV_FILE, "r", newline="") as file:
+
+        reader = csv.reader(file)
+        next(reader)
+
+        for row in reader:
+
+            transaction_type = row[2].strip().lower()
+
+            if transaction_type == "expense":
+
+                category = row[3].strip().title()
+                amount = float(row[4])
+
+                if category not in category_totals:
+                    category_totals[category] = 0
+
+                category_totals[category] += amount
+
+    if len(category_totals) == 0:
+        messagebox.showinfo(
+            "No Data",
+            "No expense transactions found."
+        )
+        return
+
+    categories = list(category_totals.keys())
+    amounts = list(category_totals.values())
+
+    plt.figure(figsize=(8, 5))
+
+    plt.bar(categories, amounts)
+
+    plt.title("Expenses by Category")
+    plt.xlabel("Category")
+    plt.ylabel("Amount (₹)")
+
+    plt.xticks(rotation=30)
+
+    plt.tight_layout()
+
+    plt.show()
 
 def show_expense_pie_chart():
 
