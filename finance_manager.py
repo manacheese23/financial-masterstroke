@@ -5,6 +5,7 @@ from tkinter import ttk
 import csv
 import os
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 CSV_FILE = "transactions.csv"
 
@@ -505,10 +506,54 @@ def delete_transaction(delete_window, transaction_table):
 def open_summary_window():
 
     summary_window = tk.Toplevel(root)
-
     summary_window.title("Monthly Summary")
-    summary_window.geometry("400x520")
+    summary_window.geometry("600x700")
     summary_window.resizable(False, False)
+
+    canvas = tk.Canvas(summary_window)
+    scrollbar = ttk.Scrollbar(
+        summary_window,
+        orient="vertical",
+        command=canvas.yview
+    )
+
+    content = tk.Frame(canvas)
+
+    content.bind(
+        "<Configure>",
+        lambda e: canvas.configure(
+            scrollregion=canvas.bbox("all")
+    )
+)
+
+    canvas.create_window(
+        (0, 0),
+        window=content,
+        anchor="nw"
+)
+
+    canvas.configure(
+        yscrollcommand=scrollbar.set
+)
+
+    canvas.pack(
+        side="left",
+        fill="both",
+        expand=True
+)
+
+    scrollbar.pack(
+        side="right",
+        fill="y"
+    
+)
+    canvas.bind_all(
+        "<MouseWheel>",
+        lambda event: canvas.yview_scroll(
+            int(-1 * (event.delta / 120)),
+            "units"
+        )
+)
 
     total_income = 0
     total_expense = 0
@@ -519,22 +564,23 @@ def open_summary_window():
 
     highest_income = 0
     highest_expense = 0
+
     expense_categories = {}
 
     with open(CSV_FILE, "r", newline="") as file:
 
         reader = csv.reader(file)
-
         next(reader)
 
         for row in reader:
 
             transaction_count += 1
 
-            transaction_type = row[2]
+            transaction_type = row[2].strip().lower()
+            category = row[3].strip().title()
             amount = float(row[4])
 
-            if transaction_type == "Income":
+            if transaction_type == "income":
 
                 total_income += amount
                 income_count += 1
@@ -542,20 +588,21 @@ def open_summary_window():
                 if amount > highest_income:
                     highest_income = amount
 
-            else:
+            elif transaction_type == "expense":
 
-                 total_expense += amount
-                 expense_count += 1
+                total_expense += amount
+                expense_count += 1
 
-                 if amount > highest_expense:
+                if amount > highest_expense:
                     highest_expense = amount
-                 category = row[3]
-                 if category not in expense_categories:
+
+                if category not in expense_categories:
                     expense_categories[category] = 0
 
-                 expense_categories[category] += amount
+                expense_categories[category] += amount
 
     net_balance = total_income - total_expense
+
     average_income = 0
     average_expense = 0
 
@@ -564,90 +611,236 @@ def open_summary_window():
 
     if expense_count > 0:
         average_expense = total_expense / expense_count
+
     largest_category = ""
     largest_amount = 0
 
-    for category in expense_categories:
+    for category, amount in expense_categories.items():
 
-        if expense_categories[category] > largest_amount:
-            largest_amount = expense_categories[category]
+        if amount > largest_amount:
+            largest_amount = amount
             largest_category = category
 
     tk.Label(
-        summary_window,
+        content,
         text="Monthly Summary",
         font=("Segoe UI", 18, "bold")
     ).pack(pady=15)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Total Income : ₹{total_income:.2f}",
         font=("Segoe UI", 11)
     ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Total Expense : ₹{total_expense:.2f}",
         font=("Segoe UI", 11)
     ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Net Balance : ₹{net_balance:.2f}",
         font=("Segoe UI", 11)
     ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Transactions : {transaction_count}",
         font=("Segoe UI", 11)
     ).pack(pady=5)
-    tk.Label(
-    summary_window,
-    text=f"Income Transactions : {income_count}",
-    font=("Segoe UI", 11)
-).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
+        text=f"Income Transactions : {income_count}",
+        font=("Segoe UI", 11)
+    ).pack(pady=5)
+
+    tk.Label(
+        content,
         text=f"Expense Transactions : {expense_count}",
         font=("Segoe UI", 11)
-).pack(pady=5)
+    ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Highest Income : ₹{highest_income:.2f}",
         font=("Segoe UI", 11)
-).pack(pady=5)
+    ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Highest Expense : ₹{highest_expense:.2f}",
         font=("Segoe UI", 11)
-).pack(pady=5)
+    ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Average Income : ₹{average_income:.2f}",
         font=("Segoe UI", 11)
-).pack(pady=5)
+    ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
         text=f"Average Expense : ₹{average_expense:.2f}",
         font=("Segoe UI", 11)
-).pack(pady=5)
-    tk.Label(
-        summary_window,
-        text=f"Highest Spending Category : {largest_category}",
-        font=("Segoe UI", 11, "bold")
-).pack(pady=5)
+    ).pack(pady=5)
 
     tk.Label(
-        summary_window,
+        content,
+        text=f"Highest Spending Category : {largest_category}",
+        font=("Segoe UI", 11, "bold")
+    ).pack(pady=5)
+
+    tk.Label(
+        content,
         text=f"Spent : ₹{largest_amount:.2f}",
         font=("Segoe UI", 11)
-).pack(pady=5)
+    ).pack(pady=5)
+
+    tk.Label(
+        content,
+        text=""
+    ).pack()
+
+    content.update_idletasks()
+
+    canvas.configure(
+        scrollregion=canvas.bbox("all")
+    )
+
+    # ----------------------------
+# Expenses by Category
+# ----------------------------
+
+    tk.Label(
+        content,
+        text="Expenses by Category",
+        font=("Segoe UI", 12, "bold")
+    ).pack(pady=(15,5))
+
+    category_table = ttk.Treeview(
+        content,
+        columns=("Category", "Amount"),
+        show="headings",
+        height=6
+        )
+
+    category_table.heading("Category", text="Category")
+    category_table.heading("Amount", text="Amount")
+
+    category_table.column("Category", width=170)
+    category_table.column("Amount", width=120, anchor="center")
+
+    for category, amount in sorted(
+        expense_categories.items(),
+        key=lambda x: x[1],
+        reverse=True):
+
+        category_table.insert(
+            "",
+            tk.END,
+            values=(
+                category,
+                f"₹{amount:.2f}"
+        )
+    )
+
+    category_table.pack(pady=5)
+    button_frame = tk.Frame(content)
+    button_frame.pack(pady=15)
+
+    tk.Button(  
+        button_frame,
+        text="Expense Pie Chart",
+        width=18,
+        command=show_expense_pie_chart
+    ).pack(side="left", padx=5)
+
+    tk.Button(
+        button_frame,
+        text="Income vs Expense",
+        width=18,
+        command=show_income_expense_chart
+    ).pack(side="left", padx=5)
+
+def show_expense_pie_chart():
+
+    expense_categories = {}
+
+    with open(CSV_FILE, "r", newline="") as file:
+
+        reader = csv.reader(file)
+        next(reader)
+
+        for row in reader:
+
+            if row[2].strip().lower() == "expense":
+
+                category = row[3]
+                amount = float(row[4])
+
+                if category not in expense_categories:
+                    expense_categories[category] = 0
+
+                expense_categories[category] += amount
+
+    if len(expense_categories) == 0:
+        messagebox.showinfo(
+            "No Data",
+            "No expense transactions found."
+        )
+        return
+
+    plt.figure(figsize=(6,6))
+
+    plt.pie(
+        expense_categories.values(),
+        labels=expense_categories.keys(),
+        autopct="%1.1f%%",
+        startangle=90
+    )
+
+    plt.title("Expenses by Category")
+
+    plt.tight_layout()
+
+    plt.show()
+
+
+def show_income_expense_chart():
+
+    total_income = 0
+    total_expense = 0
+
+    with open(CSV_FILE, "r", newline="") as file:
+
+        reader = csv.reader(file)
+        next(reader)
+
+        for row in reader:
+
+            amount = float(row[4])
+
+            if row[2].strip().lower() == "income":
+                total_income += amount
+            else:
+                total_expense += amount
+
+    plt.figure(figsize=(5,4))
+
+    plt.bar(
+        ["Income", "Expense"],
+        [total_income, total_expense]
+    )
+
+    plt.ylabel("Amount (₹)")
+    plt.title("Income vs Expense")
+
+    plt.tight_layout()
+
+    plt.show()
 # ==========================
 # Main Window
 # ==========================
