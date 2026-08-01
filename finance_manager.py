@@ -160,7 +160,13 @@ def update_transaction(
         writer = csv.writer(file)
         writer.writerows(rows)
 
-    perform_search(transaction_table, "")
+    perform_search(
+        transaction_table,
+        "",
+        "All",
+        "All",
+        "All"
+)
 
     messagebox.showinfo(
         "Success",
@@ -300,49 +306,85 @@ def open_transaction_window(
         pady=20
 )
 
-def search_transactions(search_text):
+def search_transactions(
+    search_text,
+    search_by,
+    type_filter,
+    category_filter
+):
 
     results = []
+
+    column_map = {
+        "ID": 0,
+        "Date": 1,
+        "Type": 2,
+        "Category": 3,
+        "Amount": 4,
+        "Description": 5
+    }
 
     with open(CSV_FILE, "r", newline="") as file:
 
         reader = csv.reader(file)
-
         next(reader)
 
         for row in reader:
 
-            for value in row:
+            # Type Filter
+            if type_filter != "All" and row[2] != type_filter:
+                continue
 
-                if search_text.lower() in value.lower():
+            # Category Filter
+            if category_filter != "All" and row[3] != category_filter:
+                continue
 
+            # Text Search
+            if search_text == "":
+                results.append(row)
+
+            elif search_by == "All":
+
+                for value in row:
+
+                    if search_text.lower() in value.lower():
+                        results.append(row)
+                        break
+
+            else:
+
+                column = column_map[search_by]
+
+                if search_text.lower() in row[column].lower():
                     results.append(row)
 
-                    break
-
     return results
-def perform_search(transaction_table, search_text):
 
-    # Clear current rows
+def perform_search(
+    transaction_table,
+    search_text,
+    type_filter,
+    category_filter,
+    search_by
+):
+
     for item in transaction_table.get_children():
         transaction_table.delete(item)
 
-    # Decide what to show
-    if search_text == "":
-        with open(CSV_FILE, "r", newline="") as file:
-            reader = csv.reader(file)
-            next(reader)
-            rows = list(reader)
-    else:
-        rows = search_transactions(search_text)
+    rows = search_transactions(
+        search_text,
+        search_by,
+        type_filter,
+        category_filter
+    )
 
-    # Insert rows
     for row in rows:
         transaction_table.insert(
             "",
             tk.END,
             values=row
         )
+
 def edit_selected(
     manage_window,
     transaction_table
@@ -380,6 +422,76 @@ def open_manage_window():
     search_frame = tk.Frame(manage_window)
     search_frame.pack(pady=10)
 
+
+    tk.Label(
+        search_frame,
+        text="Search By:"
+    ).pack(side="left", padx=5)
+
+    search_by = ttk.Combobox(
+        search_frame,
+        values=[
+            "All",
+            "ID",
+            "Date",
+            "Type",
+            "Category",
+            "Amount",
+            "Description"
+        ],
+        state="readonly",
+        width=12
+)
+
+    search_by.current(0)
+    search_by.pack(side="left", padx=5)
+
+    tk.Label(
+    search_frame,
+    text="Type:"
+).pack(side="left", padx=5)
+
+    type_filter = ttk.Combobox(
+        search_frame,
+        values=[
+            "All",
+            "Income",
+            "Expense"
+        ],
+    state="readonly",
+    width=10
+)
+
+    type_filter.current(0)
+    type_filter.pack(side="left", padx=5)
+
+    tk.Label(
+        search_frame,
+        text="Category:"
+    ).pack(side="left", padx=5)
+
+    category_filter = ttk.Combobox(
+        search_frame,
+        values=[
+            "All",
+            "Food",
+            "Transport",
+            "Shopping",
+            "Bills",
+            "Entertainment",
+            "Education",
+            "Salary",
+            "Freelance",
+            "Other"
+        ],
+        state="readonly",
+        width=12
+)
+
+    category_filter.current(0)
+    category_filter.pack(side="left", padx=5)
+    
+
     tk.Label(
         search_frame,
         text="Search:"
@@ -398,18 +510,30 @@ def open_manage_window():
         text="Search",
         command=lambda: perform_search(
             table,
-            search_entry.get()
+            search_entry.get(),
+            type_filter.get(),
+            category_filter.get(),
+            search_by.get()
         )
     ).pack(side="left", padx=5)
 
     tk.Button(
         search_frame,
         text="Show All",
-        command=lambda: perform_search(
-            table,
-            ""
+        command=lambda: (
+            search_entry.delete(0, tk.END),
+            search_by.current(0),
+            type_filter.current(0),
+            category_filter.current(0),
+            perform_search(
+                table,
+                "",
+                "All",
+                "All",
+                "All"
         )
-    ).pack(side="left", padx=5)
+    )
+).pack(side="left", padx=5)
 
     button_frame = tk.Frame(manage_window)
     button_frame.pack(pady=10)
@@ -443,8 +567,11 @@ def open_manage_window():
         width=18,
         command=lambda: perform_search(
             table,
-            ""
-        )
+            "",
+            "All",
+            "All",
+            "All"
+    )
     ).pack(side="left", padx=10)
 
 def delete_transaction(delete_window, transaction_table):
@@ -498,8 +625,11 @@ def delete_transaction(delete_window, transaction_table):
     )
 
     perform_search(
-    transaction_table,
-    ""
+        transaction_table,
+        "",
+        "All",
+        "All",
+        "All"
 )
 
 

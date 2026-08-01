@@ -5,7 +5,7 @@ ID,Date,Type,Category,Amount,Description
 4,03-07-2026,Expense,Transport,180,Metro Card Recharge
 5,04-07-2026,Expense,Entertainment,450,Movie Ticket
 6,06-07-2026,Income,Freelance,3500,Website Project
-7,08-07-2026,Expense,Education,850,Python Book
+7,08-07-2026,Expense,Education,850.0,Python course
 8,10-07-2026,Expense,Transport,250,Cab Fare
 9,11-07-2026,Income,Other,1000,Cash Gift
 10,12-07-2026,Expense,Bills,999,Internet Recharge
@@ -22,25 +22,24 @@ ID,Date,Type,Category,Amount,Description
 21,23-07-2026,Expense,Food,510,Restaurant
 22,24-07-2026,Expense,Shopping,2100,Headphones
 23,25-07-2026,Income,Other,800,Cashback Reward
-24,26-07-2026,Expense,Transport,220,Bus Pass
-25,28-07-2026,Expense,Education,600,Exam Fee
-26,29-07-2026,Expense,Bills,1400,Mobile Recharge
-27,31-07-2026,Expense,Entertainment,999,Gaming Purchase
-28,01-08-2026,Income,Salary,25000,Monthly Salary
-29,02-08-2026,Expense,Food,410,Groceries
-30,03-08-2026,Expense,Transport,175,Metro Travel
-31,04-08-2026,Expense,Shopping,1600,Backpack
-32,05-08-2026,Expense,Bills,1750,Electricity Bill
-33,06-08-2026,Income,Freelance,2800,Content Writing
-34,07-08-2026,Expense,Entertainment,550,Concert Ticket
-35,08-08-2026,Expense,Education,1200,Reference Book
-36,09-08-2026,Expense,Food,340,Dinner
-37,10-08-2026,Expense,Transport,260,Taxi
-38,11-08-2026,Income,Other,1500,Festival Gift
-39,12-08-2026,Expense,Bills,999,WiFi Recharge
-40,13-08-2026,Expense,Shopping,1350,Keyboard
-41,14-08-2026,Expense,Food,280,Lunch
-42,15-08-2026,Income,Freelance,6400,Python Automation
-43,16-08-2026,Expense,Entertainment,650,Theme Park
-44,17-08-2026,Expense,Education,2100,Tuition Fees
-45,18-08-2026,Expense,Transport,300,Petrol
+24,28-07-2026,Expense,Education,600,Exam Fee
+25,29-07-2026,Expense,Bills,1400,Mobile Recharge
+26,31-07-2026,Expense,Entertainment,999,Gaming Purchase
+27,01-08-2026,Income,Salary,25000,Monthly Salary
+28,02-08-2026,Expense,Food,410,Groceries
+29,03-08-2026,Expense,Transport,175,Metro Travel
+30,04-08-2026,Expense,Shopping,1600,Backpack
+31,05-08-2026,Expense,Bills,1750,Electricity Bill
+32,06-08-2026,Income,Freelance,2800,Content Writing
+33,07-08-2026,Expense,Entertainment,550,Concert Ticket
+34,08-08-2026,Expense,Education,1200,Reference Book
+35,09-08-2026,Expense,Food,340,Dinner
+36,10-08-2026,Expense,Transport,260,Taxi
+37,11-08-2026,Income,Other,1500,Festival Gift
+38,12-08-2026,Expense,Bills,999,WiFi Recharge
+39,13-08-2026,Expense,Shopping,1350,Keyboard
+40,14-08-2026,Expense,Food,280,Lunch
+41,15-08-2026,Income,Freelance,6400,Python Automation
+42,16-08-2026,Expense,Entertainment,650,Theme Park
+43,17-08-2026,Expense,Education,2100,Tuition Fees
+44,18-08-2026,Expense,Transport,300,Petrol
