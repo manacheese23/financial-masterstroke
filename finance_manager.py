@@ -9,10 +9,35 @@ import matplotlib.pyplot as plt
 
 CSV_FILE = "transactions.csv"
 
+# Theme
+PRIMARY = "#8B5CF6"
+SECONDARY = "#A78BFA"
+
+BACKGROUND = "#111827"
+CARD = "#1F2937"
+
+TEXT = "#F9FAFB"
+SUBTEXT = "#D1D5DB"
+
+SUCCESS = "#22C55E"
+DANGER = "#EF4444"
+
+FONT_TITLE = ("SF Pro Display", 34, "bold")
+FONT_HEADING = ("Segoe UI", 15, "bold")
+FONT_BODY = ("Segoe UI", 11)
+FONT_SMALL = ("Segoe UI", 10)
+FONT_BUTTON = ("Segoe UI Semibold", 11)
+BORDER = "#374151"
+TABLE_HEADER = "#312E81"
+TABLE_ROW = "#1F2937"
+
+
+#Main
 root = tk.Tk()
 root.title("FinTrack")
-root.geometry("600x500")
+root.geometry("720x650")
 root.resizable(False, False)
+root.configure(bg=BACKGROUND)
 
 
 
@@ -27,12 +52,20 @@ def create_menu_button(parent, text, command):
     button = tk.Button(
         parent,
         text=text,
-        width=25,
-        height=2,
-        font=("Segoe UI", 11),
-        command=command
+        command=command,
+        font=FONT_BODY,
+        bg=PRIMARY,
+        fg="white",
+        activebackground=SECONDARY,
+        activeforeground="white",
+        relief="flat",
+        bd=0,
+        cursor="hand2",
+        width=26,
+        height=2
     )
-    button.pack(pady=5)
+
+    button.pack(pady=10)
 
 
 def initialize_csv():
@@ -185,6 +218,8 @@ def open_transaction_window(
 ):
 
     window = tk.Toplevel(root)
+    window.configure(bg=BACKGROUND)
+    
     if mode == "add":
         window.title("Add Transaction")
     else:
@@ -193,17 +228,17 @@ def open_transaction_window(
     window.resizable(False, False)
 
     # Labels
-    tk.Label(window, text="Date").grid(row=0, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(window, text="Type").grid(row=1, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(window, text="Category").grid(row=2, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(window, text="Amount").grid(row=3, column=0, padx=10, pady=10, sticky="w")
-    tk.Label(window, text="Description").grid(row=4, column=0, padx=10, pady=10, sticky="w")
+    tk.Label(window, text="Date",bg=BACKGROUND,fg=TEXT,font=FONT_BODY).grid(row=0, column=0, padx=18, pady=12, sticky="w")
+    tk.Label(window, text="Type", bg=BACKGROUND, fg=TEXT, font=FONT_BODY).grid(row=1, column=0, padx=18, pady=12, sticky="w")
+    tk.Label(window, text="Category", bg=BACKGROUND, fg=TEXT, font=FONT_BODY).grid(row=2, column=0, padx=18, pady=12, sticky="w")
+    tk.Label(window, text="Amount", bg=BACKGROUND, fg=TEXT, font=FONT_BODY).grid(row=3, column=0, padx=18, pady=12, sticky="w")
+    tk.Label(window, text="Description", bg=BACKGROUND, fg=TEXT, font=FONT_BODY).grid(row=4, column=0, padx=18, pady=12, sticky="w")
 
 # Date Entry (Today's date by default)
     today = datetime.now().strftime("%d-%m-%Y")
 
-    date_entry = tk.Entry(window, width=25)
-    date_entry.grid(row=0, column=1, padx=10, pady=10)
+    date_entry = tk.Entry(window,bg=BACKGROUND,fg=TEXT,font=FONT_BODY,width=25)
+    date_entry.grid(row=0, column=1, padx=18, pady=12)
 
     date_entry.insert(0, today)
     # Type Dropdown
@@ -213,7 +248,8 @@ def open_transaction_window(
         state="readonly",
         width=22
     )
-    type_combo.grid(row=1, column=1, padx=10, pady=10)
+    type_combo.configure(font=FONT_BODY)
+    type_combo.grid(row=1, column=1, padx=18, pady=12)
     type_combo.current(0)
 
     # Category Dropdown
@@ -233,16 +269,17 @@ def open_transaction_window(
         state="readonly",
         width=22
     )
-    category_combo.grid(row=2, column=1, padx=10, pady=10)
+    category_combo.configure(font=FONT_BODY)
+    category_combo.grid(row=2, column=1, padx=18, pady=12)
     category_combo.current(0)
 
     # Amount Entry
-    amount_entry = tk.Entry(window, width=25)
-    amount_entry.grid(row=3, column=1, padx=10, pady=10)
+    amount_entry = tk.Entry(window,bg=BACKGROUND, fg=TEXT, font=FONT_BODY, width=25)
+    amount_entry.grid(row=3, column=1, padx=18, pady=12)
 
     # Description Entry
-    description_entry = tk.Entry(window, width=25)
-    description_entry.grid(row=4, column=1, padx=10, pady=10)
+    description_entry = tk.Entry(window, bg=BACKGROUND, fg=TEXT, font=FONT_BODY, width=25)
+    description_entry.grid(row=4, column=1, padx=18, pady=12)
 
         # Save Button
     button_text = "Save"
@@ -295,8 +332,17 @@ def open_transaction_window(
     save_button = tk.Button(
         window,
         text=button_text,
-        width=15,
-        command=button_command
+        command=button_command,
+        font=FONT_BODY,
+        bg=PRIMARY,
+        fg="white",
+        activebackground=SECONDARY,
+        activeforeground="white",
+        relief="flat",
+        bd=0,
+        cursor="hand2",
+        width=18,
+        pady=6
 )
 
     save_button.grid(
@@ -1024,32 +1070,84 @@ def show_income_expense_chart():
     plt.tight_layout()
 
     plt.show()
+
+
+def setup_styles():
+
+    style = ttk.Style()
+
+    style.theme_use("clam")
+
+    # Treeview
+    style.configure(
+        "Treeview",
+        background=CARD,
+        foreground=TEXT,
+        fieldbackground=CARD,
+        rowheight=30,
+        font=FONT_BODY,
+        borderwidth=0
+    )
+
+    # Selected row
+    style.map(
+        "Treeview",
+        background=[("selected", PRIMARY)],
+        foreground=[("selected", "white")]
+    )
+
+    # Header
+    style.configure(
+        "Treeview.Heading",
+        background=PRIMARY,
+        foreground="white",
+        font=("Segoe UI", 11, "bold"),
+        relief="flat"
+    )
+
+    style.map(
+        "Treeview.Heading",
+        background=[("active", SECONDARY)]
+    )
+
+
+
 # ==========================
 # Main Window
 # ==========================
 
 def create_main_window():
 
-    header_frame = tk.Frame(root)
-    header_frame.pack(pady=20)
+    header_frame = tk.Frame(
+        root,
+        bg=BACKGROUND
+)
+    header_frame.pack(pady=(45, 20))
 
     title_label = tk.Label(
         header_frame,
         text="FinTrack",
-        font=("Segoe UI", 22, "bold")
-    )
+        font=FONT_TITLE,
+        fg=PRIMARY,
+        bg=BACKGROUND
+)
     title_label.pack()
 
     subtitle_label = tk.Label(
         header_frame,
         text="Personal Finance Manager",
-        font=("Segoe UI", 12)
-    )
+        font=FONT_BODY,
+        fg="#666666",
+        bg=BACKGROUND
+)
     subtitle_label.pack()
     
 
-    menu_frame = tk.Frame(root)
-    menu_frame.pack(pady=30)
+    menu_frame = tk.Frame(
+        root,
+        bg=BACKGROUND
+)
+    menu_frame.pack(pady=45)
 
     create_menu_button(
     menu_frame,
@@ -1066,8 +1164,11 @@ def create_main_window():
 
 def create_transaction_table(parent, rows=None):
 
-    table_frame = tk.Frame(parent)
-    table_frame.pack(fill="both", expand=True, padx=10, pady=10)
+    table_frame = tk.Frame(
+        parent,
+        bg=BACKGROUND
+)
+    table_frame.pack(fill="both", expand=True, padx=18, pady=10)
 
     columns = (
         "ID",
@@ -1096,12 +1197,12 @@ def create_transaction_table(parent, rows=None):
     for heading in headings:
         transaction_table.heading(heading, text=heading)
 
-    transaction_table.column("ID", width=50, anchor="center")
-    transaction_table.column("Date", width=100, anchor="center")
-    transaction_table.column("Type", width=100, anchor="center")
-    transaction_table.column("Category", width=120, anchor="center")
-    transaction_table.column("Amount", width=100, anchor="center")
-    transaction_table.column("Description", width=250)
+    transaction_table.column("ID", width=60, anchor="center")
+    transaction_table.column("Date", width=110, anchor="center")
+    transaction_table.column("Type", width=110, anchor="center")
+    transaction_table.column("Category", width=130, anchor="center")
+    transaction_table.column("Amount", width=110, anchor="center")
+    transaction_table.column("Description", width=260)
 
     scrollbar = ttk.Scrollbar(
         table_frame,
@@ -1144,6 +1245,7 @@ def create_transaction_table(parent, rows=None):
 
 # Start Application
 initialize_csv()
+setup_styles()
 create_main_window()
 
 root.mainloop()
