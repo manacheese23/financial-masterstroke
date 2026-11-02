@@ -1,8 +1,28 @@
-__pycache__/
-*.pyc
 
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE settings
 .vscode/
 .idea/
 
+# PyInstaller build files
+build/
+dist/
+*.spec
+
+# Python testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Operating system files
 .DS_Store
 Thumbs.db
