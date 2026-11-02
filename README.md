@@ -30,9 +30,6 @@ FinTrack is a desktop-based personal finance manager developed using Python.
 | CSV | Transaction data storage |
 | Matplotlib | Financial charts and visualisation |
 
-## 📂 Repository Structure
-
-```text
 financial-masterstroke/
 │
 ├── README.md
@@ -40,7 +37,6 @@ financial-masterstroke/
 ├── finance_manager.py
 ├── transactions.csv
 └── README.txt
-```
 
 *The repository structure will evolve as more projects and documentation are added.*
 
